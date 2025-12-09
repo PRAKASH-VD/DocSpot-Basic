@@ -157,7 +157,6 @@ const doctorDashboard = async (req, res) => {
 
 }
 
-//api to get doctor profile for doctor panel
 const doctorProfile = async (req, res) => {
 
     try {
@@ -174,7 +173,6 @@ const doctorProfile = async (req, res) => {
 
 }
 
-//api to update doctor profile data from doctor panel
 const updateDoctorProfile = async (req, res) => {
 
     try {

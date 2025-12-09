@@ -27,20 +27,16 @@ const Appointment = () => {
     const getAvailableSlots = async () => {
         setDocSlots([])
 
-        //getting current date
         let today = new Date();
 
         for (let i = 0; i < 7; i++) {
-            //getting date with index
             let currentDate = new Date(today);
             currentDate.setDate(today.getDate() + i);
 
-            //settind end time of the date with index
             let endTime = new Date()
             endTime.setDate(today.getDate() + i)
             endTime.setHours(21, 0, 0, 0); //9 PM
 
-            //setting Hours
             if (today.getDate() === currentDate.getDate()) {
                 currentDate.setHours(currentDate.getHours() > 10 ? currentDate.getHours() + 1 : 10); //next hour
                 currentDate.setMinutes(currentDate.getMinutes() > 30 ? 30 : 0);
@@ -65,14 +61,12 @@ const Appointment = () => {
 
 
                 if (isSlotAvailable) {
-                    //add slots to array
                     timeSlots.push({
                         dateTime: new Date(currentDate),
                         time: formattedTime
                     })
                 }
 
-                //Increment current time by 30 mins
                 currentDate.setMinutes(currentDate.getMinutes() + 30);
             }
 
@@ -135,14 +129,12 @@ const Appointment = () => {
 
     return docInfo && (
         <div>
-            {/* ---Doctor Details--- */}
             <div className='flex flex-col sm:flex-row gap-4'>
                 <div>
                     <img className='bg-primary w-full sm:max-w-72 rounded-lg' src={docInfo.image} alt="" />
                 </div>
 
                 <div className='flex-1 border border-gray-400 rounded-lg p-8 py-7 bg-white mx-2 sm:mx-0 mt-[-80px] sm:mt-0'>
-                    {/* ---DocInfo: name, degree, experience--- */}
                     <p className='flex items-center gap-2 text-2xl font-medium text-gray-900'>
                         {docInfo.name}
                         <img className='w-5' src={assets.verified_icon} alt="" />
@@ -152,7 +144,6 @@ const Appointment = () => {
                         <button className='py-0.5 px-2 border text-xs rounded-full cursor-pointer'>{docInfo.experience}</button>
                     </div>
 
-                    {/* ---Doctor About--- */}
                     <div>
                         <p className='flex items-center gap-1 text-sm font-medium text-gray-900 mt-3'>
                             About <img src={assets.info_icon} alt="" />
@@ -165,7 +156,6 @@ const Appointment = () => {
                 </div>
             </div>
 
-            {/* ---Booking Slots--- */}
             <div className='sm:ml-72 sm:pl-4 mt-4 font-medium text-gray-700'>
                 <p>Booking Slots</p>
                 <div className='flex gap-3 items-center w-full overflow-x-scroll mt-4'>
@@ -189,7 +179,6 @@ const Appointment = () => {
                 <button onClick={bookAppointment} className='bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6 cursor-pointer'>Book an Appointment</button>
             </div>
 
-            {/* Listing Related Doctors */}
             <RelatedDoctors docId={docId} speciality={docInfo.speciality} />
 
         </div>

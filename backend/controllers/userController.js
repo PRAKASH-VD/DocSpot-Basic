@@ -7,7 +7,6 @@ import doctorModel from '../models/doctorModel.js'
 import appointmentModel from '../models/appointmentModel.js'
 import razorpay from 'razorpay'
 
-//API to register user
 const registerUser = async (req, res) => {
 
     try {
@@ -18,17 +17,14 @@ const registerUser = async (req, res) => {
             return res.json({ success: false, message: "Missing Details" })
         }
 
-        //validating email format
         if (!validator.isEmail(email)) {
             return res.json({ success: false, message: "enter valid email" })
         }
 
-        //validating strong password
         if (password.length < 8) {
             return res.json({ success: false, message: "enter strong password" })
         }
 
-        //hashing user password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -52,7 +48,6 @@ const registerUser = async (req, res) => {
 
 }
 
-//api for user login
 const loginUser = async (req, res) => {
 
     try {
@@ -80,7 +75,6 @@ const loginUser = async (req, res) => {
 
 }
 
-// api to get user data
 const getProfile = async (req, res) => {
 
     try {
@@ -97,7 +91,6 @@ const getProfile = async (req, res) => {
 
 };
 
-//api to update user profile
 const updateProfile = async (req, res) => {
     try {
         const userId = req.userId
@@ -112,7 +105,6 @@ const updateProfile = async (req, res) => {
 
         if (imageFile) {
 
-            //upload image to cloudinary
             const imageUpload = await cloudinary.uploader.upload(imageFile.path, { resource_type: 'image' })
             const imageURL = imageUpload.secure_url
 
@@ -127,7 +119,6 @@ const updateProfile = async (req, res) => {
     }
 }
 
-//api to book appointment
 const bookAppointment = async (req, res) => {
 
     try {
@@ -142,7 +133,6 @@ const bookAppointment = async (req, res) => {
 
         let slots_booked = docData.slots_booked
 
-        //checking for availability
         if (slots_booked[slotDate]) {
             if (slots_booked[slotDate].includes(slotTime)) {
                 return res.json({ success: false, message: 'Slot not available' })
@@ -172,7 +162,6 @@ const bookAppointment = async (req, res) => {
         const newAppointment = new appointmentModel(appointmentData)
         await newAppointment.save()
 
-        //save new slots data in docData
         await doctorModel.findByIdAndUpdate(docId, { slots_booked })
 
         res.json({ success: true, message: 'Appointment Booked' })
@@ -184,12 +173,10 @@ const bookAppointment = async (req, res) => {
 
 }
 
-//api to get user appointments for frontend my-appoinments page
 const listAppointment = async (req, res) => {
 
     try {
         const userId = req.userId
-        //const {userId}= req.body
         const appointments = await appointmentModel.find({ userId })
 
         res.json({ success: true, appointments })
@@ -201,7 +188,6 @@ const listAppointment = async (req, res) => {
 
 }
 
-//api to cancel appointment
 const cancelAppointment = async (req, res) => {
 
     try {
@@ -210,14 +196,12 @@ const cancelAppointment = async (req, res) => {
 
         const appointmentData = await appointmentModel.findById(appointmentId)
 
-        //verify appointment
         if (appointmentData.userId !== userId) {
             return res.json({ success: true, message: 'Unauthorized action' })
         }
 
         await appointmentModel.findByIdAndUpdate(appointmentId, { cancelled: true })
 
-        //releasing doctor list
 
         const { docId, slotDate, slotTime } = appointmentData
 
@@ -243,7 +227,6 @@ const razorpayInstance = new razorpay({
     key_secret: process.env.RAZORPAY_KEY_SECRET
 })
 
-//api to make payment of appointment using razorpay
 const paymentRazorpay = async (req, res) => {
 
     try {
@@ -255,14 +238,12 @@ const paymentRazorpay = async (req, res) => {
             return res.json({ success: true, message: 'Appointment Cancelled or not found' })
         }
 
-        //creating options for razorpay payment
         const options = {
             amount: appointmentData.amount * 2,
             currency: process.env.CURRENCY,
             receipt: appointmentId,
         }
 
-        //creation of an order
         const order = await razorpayInstance.orders.create(options)
 
         res.json({ success: true, order })
@@ -274,7 +255,6 @@ const paymentRazorpay = async (req, res) => {
 
 }
 
-//api to verify payment of razorpay
 const verifyRazorpay = async(req,res) =>{
     try {
 
