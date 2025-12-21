@@ -7,6 +7,10 @@ A full-stack MERN application for managing doctors, appointments, users, and adm
 DocSpot is a doctor appointment booking system built using the MERN Stack (MongoDB, Express, React, Node.js).
 The application provides:
 
+User login:https://docsport-users.netlify.app
+admin login : https://docsport-admin.netlify.app
+
+
 👨‍⚕️ Admin Panel – Add doctors, manage details, view appointments
 
 👤 Patients – Book appointments, view doctor profiles
